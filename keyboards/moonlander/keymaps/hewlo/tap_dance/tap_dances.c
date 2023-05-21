@@ -3,5 +3,5 @@ enum tap_dances {
 };
 
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_ESC, KC_CAPS),
+    [TD_CAPS] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_caps_finished, td_caps_reset),
 };
