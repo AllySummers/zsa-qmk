@@ -104,7 +104,7 @@ void set_layer_color(int layer) {
     uint8_t modifiers = get_mods();
 
     for (int i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
-        if ((modifiers & MOD_BIT(MOD_MASK_SHIFT) || modifiers & MOD_BIT(KC_LEFT_SHIFT) || modifiers & MOD_BIT(KC_RIGHT_SHIFT)) && (
+        if (modifiers == MOD_MASK_SHIFT && (
             /* Shift Symbols */
             i == 5 ||
             i == 10 ||
@@ -128,6 +128,8 @@ void set_layer_color(int layer) {
             i == 67
         )) {
             rgb_matrix_set_color(i, RGB_RED);
+        } else if (i == 2 && is_caps_word_on()) {
+            rgb_matrix_set_color(i, RGB_WHITE);
         } else if (i == 2 && host_keyboard_led_state().caps_lock) {
             rgb_matrix_set_color(i, RGB_RED);
         } else {
@@ -175,7 +177,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     bool LED_2 = false;
     bool LED_3 = false;
     bool LED_4 = false;
-    bool LED_5 = false;
 
     if (transport_connected) {
         switch (get_highest_layer(state)) {
@@ -211,7 +212,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     ML_LED_2(LED_2);
     ML_LED_3(LED_3);
     ML_LED_4(LED_4);
-    ML_LED_5(LED_5);
 
     return state;
 }
@@ -230,7 +230,8 @@ void housekeeping_task_user(void) {
 }
 
 void led_update_ports(led_t led_state) {
-    ML_LED_6(led_state.caps_lock);
+    ML_LED_5(led_state.caps_lock);
+    ML_LED_6(is_caps_word_on());
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
